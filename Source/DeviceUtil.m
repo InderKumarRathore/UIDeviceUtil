@@ -11,9 +11,11 @@
 #import "DeviceUtil+Constant.h"
 #include <sys/sysctl.h>
 
-@implementation DeviceUtil {
-  NSDictionary *deviceList;
-}
+@interface DeviceUtil()
+@property (nonatomic, strong) NSDictionary *deviceList;
+@end
+
+@implementation DeviceUtil
 
 - (instancetype)init
 {
@@ -33,8 +35,8 @@
       deviceUtilBundle = deviceUtilTopBundle;
     }
     NSString *path = [deviceUtilBundle pathForResource:@"DeviceList" ofType:@"plist"];
-    deviceList = [NSDictionary dictionaryWithContentsOfFile:path];
-    NSAssert(deviceList != nil, @"DevicePlist not found in the bundle.");
+    self.deviceList = [NSDictionary dictionaryWithContentsOfFile:path];
+    NSAssert(self.deviceList != nil, @"DevicePlist not found in the bundle.");
   }
   return self;
 }
@@ -107,7 +109,7 @@
 
 - (NSString*)hardwareDescription {
   NSString *hardware = [self hardwareString];
-  NSString *hardwareDescription = [[deviceList objectForKey:hardware] objectForKey:@"name"];
+  NSString *hardwareDescription = [[self.deviceList objectForKey:hardware] objectForKey:@"name"];
   if (hardwareDescription) {
     return hardwareDescription;
   }
@@ -137,7 +139,7 @@
 
 - (float)hardwareNumber {
   NSString *hardware = [self hardwareString];
-  float version = [[[deviceList objectForKey:hardware] objectForKey:@"version"] floatValue];
+  float version = [[[self.deviceList objectForKey:hardware] objectForKey:@"version"] floatValue];
   if (version != 0.0f) {
     return version;
   }
